@@ -1,0 +1,19 @@
+account_id,account_name,csm_owner,priority_tier,risk_score,opportunity_score,health_delta,current_health_score,usage_trend,nps_score,expansion_signal,support_ticket_count_30d,has_open_high_severity_ticket,notable_change
+A008,Harbor Insurance,Morgan Lee,Urgent,76,0,18,48,declining,2,low,9,True,Lower weekly engagement and fewer power-user actions
+A017,Quartz Media,Morgan Lee,Urgent,70,0,18,46,declining,2,low,6,True,Lower weekly engagement and fewer power-user actions
+A004,DeltaEd Services,Riley Patel,Urgent,68,0,19,54,declining,3,low,5,False,Lower weekly engagement and fewer power-user actions
+A014,Northstar Travel,Morgan Lee,Urgent,66,0,19,52,declining,3,low,4,False,Lower weekly engagement and fewer power-user actions
+A002,BrightPath Logistics,Taylor Chen,Urgent,42,10,8,61,flat,4,medium,7,True,Stable usage with no sharp movement
+A005,Evergreen Finance,Morgan Lee,Urgent,40,10,9,67,declining,5,medium,3,True,Lower weekly engagement and fewer power-user actions
+A001,Acme Retail,Taylor Chen,Urgent,40,0,9,72,declining,6,low,4,False,Lower weekly engagement and fewer power-user actions
+A010,Juniper Manufacturing,Taylor Chen,Urgent,38,10,5,58,declining,5,medium,6,False,Lower weekly engagement and fewer power-user actions
+A012,Lumen Energy,Riley Patel,Watch,28,10,-3,63,flat,4,medium,8,False,Stable usage with no sharp movement
+A015,Orchid Telecom,Riley Patel,Watch,16,24,-2,79,flat,6,high,4,False,Stable usage with no sharp movement
+A009,Indigo Studios,Riley Patel,Stable,14,0,1,69,flat,6,low,2,False,Stable usage with no sharp movement
+A016,Pioneer Biotech,Taylor Chen,Stable,12,10,-2,74,flat,7,medium,3,False,Stable usage with no sharp movement
+A007,GreenLeaf Foods,Taylor Chen,Stable,10,11,2,76,flat,7,medium,0,False,Stable usage with no sharp movement
+A018,Redwood Cloud,Riley Patel,Expansion,4,37,-7,86,growing,9,high,2,False,Increased adoption among additional users
+A006,Futura Robotics,Riley Patel,Expansion,4,30,-5,82,growing,8,high,2,False,Increased adoption among additional users
+A003,Cobalt Health,Morgan Lee,Expansion,2,39,-3,88,growing,9,high,1,False,Increased adoption among additional users
+A011,Keystone Legal,Morgan Lee,Expansion,2,32,-4,84,growing,8,high,1,False,Increased adoption among additional users
+A013,Mosaic Labs,Taylor Chen,Expansion,0,35,-2,91,growing,10,medium,0,False,Increased adoption among additional users

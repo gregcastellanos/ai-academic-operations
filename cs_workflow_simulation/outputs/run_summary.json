@@ -1,0 +1,290 @@
+{
+  "accounts_reviewed": 18,
+  "priority_tier_counts": {
+    "Urgent": 8,
+    "Watch": 2,
+    "Expansion": 5,
+    "Stable": 3
+  },
+  "tickets_routed": 12,
+  "checkin_briefs_generated": 12,
+  "junior_outputs_reviewed": 8,
+  "intervention_plans_generated": 15,
+  "final_routing_decisions": 20,
+  "evaluation_checks": {
+    "every_high_risk_account_has_action": {
+      "passed": true,
+      "detail": "8 Urgent accounts; 0 missing a plan: []"
+    },
+    "every_high_severity_ticket_escalated_or_resolved": {
+      "passed": true,
+      "detail": "0 high-severity tickets misrouted: []"
+    },
+    "every_checkin_has_context_and_next_steps": {
+      "passed": true,
+      "detail": "12 briefs generated; 0 had no prior call-note context (still received next steps): []"
+    },
+    "every_junior_output_checked_against_standards": {
+      "passed": true,
+      "detail": "8 outputs reviewed; 0 had no standards checked."
+    }
+  },
+  "representative_end_to_end_runs": [
+    {
+      "account_id": "A008",
+      "account_name": "Harbor Insurance",
+      "priority_tier": "Urgent",
+      "risk_score": 76,
+      "tickets_routed": [
+        {
+          "ticket_id": "T001",
+          "account_id": "A008",
+          "severity": "High",
+          "customer_sentiment": "frustrated",
+          "account_priority_tier": "Urgent",
+          "route": "escalation",
+          "routing_reason": "High-severity ticket always escalates regardless of account tier.",
+          "issue_summary": "Executive sponsor says implementation is blocked by SSO failures"
+        }
+      ],
+      "checkin_brief": {
+        "checkin_id": "C001",
+        "account_id": "A008",
+        "account_name": "Harbor Insurance",
+        "priority": "High",
+        "checkin_type": "Implementation recovery",
+        "scheduled_date": "2026-05-04",
+        "topics_to_cover": "SSO status, rollout unblock plan, executive confidence",
+        "account_priority_tier": "Urgent",
+        "prior_context": "Last call (2026-04-17): Implementation progress review. Goal: Resolve SSO and complete rollout. Risk/blocker: SSO blockers delaying launch. Outstanding follow-up: CSM to coordinate technical escalation.",
+        "next_steps": "Confirm status of: CSM to coordinate technical escalation. Address open ticket(s): Executive sponsor says implementation is blocked by SSO failures."
+      },
+      "quality_review": [
+        {
+          "output_id": "O001",
+          "account_id": "A008",
+          "output_type": "Executive update draft",
+          "standards_checked": "QS001;QS002;QS003;QS005",
+          "standards_passed": "QS002;QS003",
+          "standards_failed": "QS001;QS005",
+          "overall_recommendation": "Escalate to senior CSM review",
+          "review_notes": "QS001: FAIL - Draft reads generically; no clear tie to this account's specific goal or blocker. | QS002: PASS - Concrete next step present. | QS003: PASS - Risk framing is proportionate for an Urgent-tier account. | QS005: FAIL - Account has an open high-severity issue but draft does not signal escalation."
+        }
+      ],
+      "intervention_plan": {
+        "account_id": "A008",
+        "account_name": "Harbor Insurance",
+        "tier": "Urgent",
+        "csm_owner": "Morgan Lee",
+        "recommended_action": "Schedule an executive recovery call within 5 business days; Morgan Lee to bring a written remediation plan with dated milestones.",
+        "rationale": "Risk score 76, opportunity score 0, tier Urgent. Last contact flagged: SSO blockers delaying launch. 1 open ticket(s): Executive sponsor says implementation is blocked by SSO failures.",
+        "due_window": "5 business days"
+      }
+    },
+    {
+      "account_id": "A005",
+      "account_name": "Evergreen Finance",
+      "priority_tier": "Urgent",
+      "risk_score": 40,
+      "tickets_routed": [
+        {
+          "ticket_id": "T007",
+          "account_id": "A005",
+          "severity": "High",
+          "customer_sentiment": "concerned",
+          "account_priority_tier": "Urgent",
+          "route": "escalation",
+          "routing_reason": "High-severity ticket always escalates regardless of account tier.",
+          "issue_summary": "Executive sponsor requests renewal usage summary by Friday"
+        }
+      ],
+      "checkin_brief": {
+        "checkin_id": "C002",
+        "account_id": "A005",
+        "account_name": "Evergreen Finance",
+        "priority": "High",
+        "checkin_type": "Renewal value review",
+        "scheduled_date": "2026-05-05",
+        "topics_to_cover": "ROI summary, adoption proof, renewal risk",
+        "account_priority_tier": "Urgent",
+        "prior_context": "Last call (2026-04-23): Renewal check-in. Goal: Demonstrate measurable usage value. Risk/blocker: Sponsor wants concise ROI summary. Outstanding follow-up: Prepare renewal value snapshot.",
+        "next_steps": "Confirm status of: Prepare renewal value snapshot. Address open ticket(s): Executive sponsor requests renewal usage summary by Friday."
+      },
+      "quality_review": [
+        {
+          "output_id": "O002",
+          "account_id": "A005",
+          "output_type": "Renewal summary",
+          "standards_checked": "QS001;QS002;QS004",
+          "standards_passed": "QS004",
+          "standards_failed": "QS001;QS002",
+          "overall_recommendation": "Revise before sending",
+          "review_notes": "QS001: FAIL - Draft reads generically; no clear tie to this account's specific goal or blocker. | QS002: FAIL - Vague language without a specific committed action/owner/timing. | QS004: PASS - Concise and professional length."
+        }
+      ],
+      "intervention_plan": {
+        "account_id": "A005",
+        "account_name": "Evergreen Finance",
+        "tier": "Urgent",
+        "csm_owner": "Morgan Lee",
+        "recommended_action": "Schedule an executive recovery call within 5 business days; Morgan Lee to bring a written remediation plan with dated milestones.",
+        "rationale": "Risk score 40, opportunity score 10, tier Urgent. Last contact flagged: Sponsor wants concise ROI summary. 1 open ticket(s): Executive sponsor requests renewal usage summary by Friday.",
+        "due_window": "5 business days"
+      }
+    },
+    {
+      "account_id": "A014",
+      "account_name": "Northstar Travel",
+      "priority_tier": "Urgent",
+      "risk_score": 66,
+      "tickets_routed": [
+        {
+          "ticket_id": "T003",
+          "account_id": "A014",
+          "severity": "Medium",
+          "customer_sentiment": "negative",
+          "account_priority_tier": "Urgent",
+          "route": "escalation",
+          "routing_reason": "Medium-severity ticket on a Urgent account escalates due to compounding risk.",
+          "issue_summary": "Admin reports mobile users cannot complete onboarding steps"
+        }
+      ],
+      "checkin_brief": {
+        "checkin_id": "C003",
+        "account_id": "A014",
+        "account_name": "Northstar Travel",
+        "priority": "High",
+        "checkin_type": "Mobile adoption plan",
+        "scheduled_date": "2026-05-05",
+        "topics_to_cover": "Mobile onboarding issue, renewal timeline",
+        "account_priority_tier": "Urgent",
+        "prior_context": "Last call (2026-04-16): Mobile adoption check. Goal: Increase field-team onboarding. Risk/blocker: Mobile onboarding friction. Outstanding follow-up: Send mobile onboarding plan.",
+        "next_steps": "Confirm status of: Send mobile onboarding plan. Address open ticket(s): Admin reports mobile users cannot complete onboarding steps."
+      },
+      "quality_review": [
+        {
+          "output_id": "O003",
+          "account_id": "A014",
+          "output_type": "Mobile adoption plan",
+          "standards_checked": "QS001;QS002;QS003",
+          "standards_passed": "QS003",
+          "standards_failed": "QS001;QS002",
+          "overall_recommendation": "Revise before sending",
+          "review_notes": "QS001: FAIL - Draft reads generically; no clear tie to this account's specific goal or blocker. | QS002: FAIL - Vague language without a specific committed action/owner/timing. | QS003: PASS - Risk framing is proportionate for an Urgent-tier account."
+        }
+      ],
+      "intervention_plan": {
+        "account_id": "A014",
+        "account_name": "Northstar Travel",
+        "tier": "Urgent",
+        "csm_owner": "Morgan Lee",
+        "recommended_action": "Schedule an executive recovery call within 5 business days; Morgan Lee to bring a written remediation plan with dated milestones.",
+        "rationale": "Risk score 66, opportunity score 0, tier Urgent. Last contact flagged: Mobile onboarding friction. 1 open ticket(s): Admin reports mobile users cannot complete onboarding steps.",
+        "due_window": "5 business days"
+      }
+    },
+    {
+      "account_id": "A010",
+      "account_name": "Juniper Manufacturing",
+      "priority_tier": "Urgent",
+      "risk_score": 38,
+      "tickets_routed": [
+        {
+          "ticket_id": "T004",
+          "account_id": "A010",
+          "severity": "Medium",
+          "customer_sentiment": "neutral",
+          "account_priority_tier": "Urgent",
+          "route": "escalation",
+          "routing_reason": "Medium-severity ticket on a Urgent account escalates due to compounding risk.",
+          "issue_summary": "Power user wants help interpreting usage dashboard drop"
+        }
+      ],
+      "checkin_brief": {
+        "checkin_id": "C006",
+        "account_id": "A010",
+        "account_name": "Juniper Manufacturing",
+        "priority": "Medium",
+        "checkin_type": "Usage dashboard recovery",
+        "scheduled_date": "2026-05-07",
+        "topics_to_cover": "Reporting usage drop, export data trust",
+        "account_priority_tier": "Urgent",
+        "prior_context": "Last call (2026-04-24): Usage dashboard review. Goal: Understand drop in reporting usage. Risk/blocker: Report exports not trusted. Outstanding follow-up: Investigate data freshness issue.",
+        "next_steps": "Confirm status of: Investigate data freshness issue. Address open ticket(s): Power user wants help interpreting usage dashboard drop."
+      },
+      "quality_review": [
+        {
+          "output_id": "O006",
+          "account_id": "A010",
+          "output_type": "Internal risk note",
+          "standards_checked": "QS003;QS004;QS005",
+          "standards_passed": "QS003;QS004;QS005",
+          "standards_failed": "",
+          "overall_recommendation": "Approve",
+          "review_notes": "QS003: PASS - Risk framing is proportionate for an Urgent-tier account. | QS004: PASS - Concise and professional length. | QS005: PASS - No unnecessary escalation language."
+        }
+      ],
+      "intervention_plan": {
+        "account_id": "A010",
+        "account_name": "Juniper Manufacturing",
+        "tier": "Urgent",
+        "csm_owner": "Taylor Chen",
+        "recommended_action": "Schedule an executive recovery call within 5 business days; Taylor Chen to bring a written remediation plan with dated milestones.",
+        "rationale": "Risk score 38, opportunity score 10, tier Urgent. Last contact flagged: Report exports not trusted. 1 open ticket(s): Power user wants help interpreting usage dashboard drop.",
+        "due_window": "5 business days"
+      }
+    },
+    {
+      "account_id": "A017",
+      "account_name": "Quartz Media",
+      "priority_tier": "Urgent",
+      "risk_score": 70,
+      "tickets_routed": [
+        {
+          "ticket_id": "T006",
+          "account_id": "A017",
+          "severity": "High",
+          "customer_sentiment": "negative",
+          "account_priority_tier": "Urgent",
+          "route": "escalation",
+          "routing_reason": "High-severity ticket always escalates regardless of account tier.",
+          "issue_summary": "Customer says team has stopped using the platform and needs a reset"
+        }
+      ],
+      "checkin_brief": {
+        "checkin_id": "C007",
+        "account_id": "A017",
+        "account_name": "Quartz Media",
+        "priority": "High",
+        "checkin_type": "Account reset",
+        "scheduled_date": "2026-05-07",
+        "topics_to_cover": "Champion gap, platform value, reactivation",
+        "account_priority_tier": "Urgent",
+        "prior_context": "Last call (2026-04-09): Reactivation call. Goal: Rebuild use case and assign owner. Risk/blocker: No clear champion. Outstanding follow-up: Identify new sponsor and propose reset.",
+        "next_steps": "Confirm status of: Identify new sponsor and propose reset. Address open ticket(s): Customer says team has stopped using the platform and needs a reset."
+      },
+      "quality_review": [
+        {
+          "output_id": "O004",
+          "account_id": "A017",
+          "output_type": "Reactivation email",
+          "standards_checked": "QS001;QS002;QS006",
+          "standards_passed": "",
+          "standards_failed": "QS001;QS002;QS006",
+          "overall_recommendation": "Revise before sending",
+          "review_notes": "QS001: FAIL - Draft reads generically; no clear tie to this account's specific goal or blocker. | QS002: FAIL - Vague language without a specific committed action/owner/timing. | QS006: FAIL - Prior follow-up item ('Identify new sponsor and propose reset') is not addressed."
+        }
+      ],
+      "intervention_plan": {
+        "account_id": "A017",
+        "account_name": "Quartz Media",
+        "tier": "Urgent",
+        "csm_owner": "Morgan Lee",
+        "recommended_action": "Schedule an executive recovery call within 5 business days; Morgan Lee to bring a written remediation plan with dated milestones.",
+        "rationale": "Risk score 70, opportunity score 0, tier Urgent. Last contact flagged: No clear champion. 1 open ticket(s): Customer says team has stopped using the platform and needs a reset.",
+        "due_window": "5 business days"
+      }
+    }
+  ],
+  "total_estimated_simulation_cost": 0.084409
+}

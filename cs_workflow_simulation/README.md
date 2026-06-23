@@ -1,0 +1,86 @@
+# Customer Success AI Workflow Simulation
+
+A runnable, single-command simulation of an AI-assisted B2B SaaS customer success operation. Built for the Crossover AI System Design Assessment. It is a workflow simulation, not production software — the point is to show the reasoning and routing logic an AI system would need, with token/cost math that transfers directly into the Token Math Sheet.
+
+## Setup
+
+No dependencies beyond Python 3 standard library.
+
+```bash
+cd cs_workflow_simulation
+python3 workflow.py
+```
+
+## What it does
+
+Loads the 7 input CSVs in `data/` and runs them through 7 workflow stages, end to end, for the full 18-account portfolio. Writes results to `outputs/`.
+
+## Workflow stages
+
+1. **Daily account review** (`daily_account_review`) — pulls the latest usage event, health-score delta, ticket count, and NPS for every account into one reviewable record. High-volume, low-judgment — this is the stage that runs every business day across the whole book.
+2. **Account prioritization** (`account_prioritization`) — scores each account on a transparent `risk_score` (health decline, usage trend, ticket volume, NPS) and `opportunity_score` (expansion signal, high health/NPS), then assigns a tier: **Urgent** / **Watch** / **Expansion** / **Stable**. The score formula is in the code, not a black box — anyone reviewing this can recompute it by hand.
+3. **Inbound support issue routing** (`route_ticket`) — every ticket gets a route: `escalation`, `standard_resolution`, or `immediate_resolution`. High severity always escalates. Medium severity escalates only on Urgent/Watch accounts (risk compounding). Low severity resolves immediately unless sentiment is negative.
+4. **Customer check-in preparation** (`customer_checkin_preparation`) — for each scheduled check-in, assembles a brief: prior call summary, stated customer goal, last flagged risk, outstanding follow-up items, and any open tickets — so the CSM walks in with full context instead of re-discovering it live.
+5. **Customer-facing output quality review** (`output_quality_review`) — checks each junior-drafted output against the specific quality standards (QS001–QS006) it was tagged with. This stage uses deterministic heuristics (keyword overlap, action-word detection, risk-language proportionality) rather than an actual LLM call — see "What's heuristic vs. what would be a real model call" below.
+6. **Targeted intervention planning** (`targeted_intervention_planning`) — for every Urgent/Watch/Expansion account, generates a recommended action, owner, due window, and rationale tied to the specific risk/opportunity signals found.
+7. **Escalation / follow-up / immediate-resolution routing** (`escalation_followup_routing`) — the final consolidation pass: every routed ticket and every reviewed output lands in exactly one bucket (`escalation`, `follow_up`, or `immediate_resolution`), so nothing produced by stages 3 or 5 is left unresolved.
+
+## Output files (`outputs/`)
+
+- **`account_prioritization.csv`** — all 18 accounts, ranked, with risk/opportunity scores and tier.
+- **`issue_routing.csv`** — every support ticket with its route and the reason for that route.
+- **`checkin_briefs.md`** — one brief per scheduled check-in, human-readable.
+- **`quality_review.csv`** — every junior output, which standards passed/failed, and the resulting recommendation (Approve / Revise / Escalate to senior CSM review).
+- **`intervention_plan.md`** — recommended action per Urgent/Watch/Expansion account, grouped by tier.
+- **`run_summary.json`** — aggregate counts, the evaluation check results, and 5 fully expanded end-to-end account runs (every stage's output for one account, in one place) for accounts A008, A005, A014, A010, A017 — chosen because they have data in every input file.
+- **`token_cost_summary.csv`** — per-stage token/cost rollup. Columns are named to map directly onto the Token Math Sheet's "Token Math Template" tab (`workflow_component`, `operating_area`, `model`, input/output $ per 1M, tokens per run). The `notebook_measured_avg_cost_per_run` column is what you transfer into that sheet's "Notebook measured avg cost/run" field for the estimate-vs-measured variance check.
+
+## Evaluation checks
+
+Run automatically at the end of every execution and printed to console plus written into `run_summary.json`:
+
+- Every Urgent-tier account has a recommended action in the intervention plan.
+- Every high-severity ticket routes to `escalation` or `immediate_resolution` (never sits in a standard queue).
+- Every check-in brief contains both prior context and next steps.
+- Every junior output is checked against all of its tagged quality standards (none silently skipped).
+
+All four pass on the current dataset (verified by running `workflow.py`).
+
+## Model routing and why
+
+| Stage | Model | Why |
+|---|---|---|
+| Account monitoring | Claude Haiku 4.5 | Highest volume (runs daily across the full portfolio), lowest judgment — pure data assembly. |
+| Prioritization | Claude Haiku 4.5 | Same volume profile; scoring logic is rules-based, not reasoning-heavy. |
+| Inbound issue handling | Claude Sonnet 4.6 | Needs judgment to weigh severity against account context, not just a lookup table. |
+| Customer check-in support | Claude Sonnet 4.6 | Synthesizing call history + tickets + goals into a coherent brief benefits from a stronger model. |
+| Output quality review | GPT-5.4 mini | Rubric-based evaluation against named standards — strong enough for structured judging, cheaper than a frontier model, and demonstrates routing across providers rather than defaulting to one. |
+| Targeted intervention planning | Claude Sonnet 4.6 | Multi-signal reasoning (risk score + call notes + open tickets) per account, but bounded to Urgent/Watch/Expansion accounts only, so volume is naturally low. |
+| Escalation / 24-7 responsiveness | Claude Opus 4.7 | Highest stakes, lowest volume stage — reserved for the final consolidation of anything already flagged as escalation-worthy. |
+
+This mirrors the assessment's stated principle: cheap models for high-volume/simple work, stronger models only where the reasoning is actually hard.
+
+## What's heuristic vs. what would be a real model call
+
+This simulation does not call any LLM API — it estimates token/cost footprint and implements the *decision logic* an LLM-backed system would need, in plain Python, so it's auditable line by line. In a real build:
+
+- Stages 1–4 and 7 are good candidates to stay mostly rules-based even in production, with a cheap model only for any free-text summarization.
+- Stage 5 (quality review) and stage 6 (intervention planning) are where an actual LLM call earns its cost — judging tone, risk-proportionality, and drafting a tailored recommendation are not reliably rule-based. The heuristics here (`ACTION_WORDS`, `OVERSTATE_WORDS`, keyword overlap) are a deliberately simple stand-in for what an LLM-as-judge would do against the same `quality_standards.csv` rubric.
+
+## Assumptions
+
+- Token estimates use the standard rule-of-thumb `tokens ≈ characters / 4` against the actual JSON-serialized input/output for each simulated call — this is the same heuristic most teams use for back-of-envelope estimation before measuring real usage.
+- Pricing constants mirror the Token Math Sheet's Pricing Reference tab (effective 2026-05-17): Claude Haiku 4.5 ($1/$5 per 1M), Claude Sonnet 4.6 ($3/$15), Claude Opus 4.7 ($5/$25), GPT-5.4 mini ($0.75/$4.50).
+- The 5 "representative end-to-end" accounts (A008, A005, A014, A010, A017) were chosen because they're the only accounts with rows in every single input file — call notes, a junior output, a support ticket, a scheduled check-in, and usage events — so picking them demonstrates every stage working on the same account rather than stitching together partial coverage.
+- Risk/opportunity scoring weights (e.g. `usage_trend_weight * 6`, `risk_score >= 30` for Urgent) are illustrative and documented in code; in a real deployment these would be calibrated against actual churn/renewal outcomes, not picked once and left alone.
+- Quality-review heuristics are intentionally simple keyword/structure checks, not semantic understanding — they're meant to demonstrate the *shape* of automated rubric scoring, not to be production-accurate.
+
+## How token and cost estimates are calculated
+
+For every simulated call, the script logs the JSON-serialized input payload and the JSON-serialized output, converts each to a token estimate (`len(text) // 4`), and prices it using that stage's assigned model:
+
+```
+cost = (input_tokens / 1,000,000) * input_price_per_1M + (output_tokens / 1,000,000) * output_price_per_1M
+```
+
+`token_cost_summary.csv` aggregates this per stage across all runs in this single execution (18 accounts, 12 tickets, 12 check-ins, 8 junior outputs). To project an annual figure for the Token Math Sheet, multiply each stage's `avg_input_tokens_per_run` / `avg_output_tokens_per_run` by the real expected daily/weekly/monthly volume and the appropriate cadence-annualization factor — this simulation gives you the per-run numbers; the sheet's cadence math does the annualizing.

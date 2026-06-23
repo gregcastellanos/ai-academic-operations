@@ -1,0 +1,13 @@
+ticket_id,account_id,severity,customer_sentiment,account_priority_tier,route,routing_reason,issue_summary
+T001,A008,High,frustrated,Urgent,escalation,High-severity ticket always escalates regardless of account tier.,Executive sponsor says implementation is blocked by SSO failures
+T002,A002,High,concerned,Urgent,escalation,High-severity ticket always escalates regardless of account tier.,Customer asks why integration sync has failed three times this week
+T003,A014,Medium,negative,Urgent,escalation,Medium-severity ticket on a Urgent account escalates due to compounding risk.,Admin reports mobile users cannot complete onboarding steps
+T004,A010,Medium,neutral,Urgent,escalation,Medium-severity ticket on a Urgent account escalates due to compounding risk.,Power user wants help interpreting usage dashboard drop
+T005,A012,Low,neutral,Watch,immediate_resolution,"Low-severity, non-negative sentiment ticket resolved immediately by frontline/AI draft.",Customer opened several how-to questions about advanced permissions
+T006,A017,High,negative,Urgent,escalation,High-severity ticket always escalates regardless of account tier.,Customer says team has stopped using the platform and needs a reset
+T007,A005,High,concerned,Urgent,escalation,High-severity ticket always escalates regardless of account tier.,Executive sponsor requests renewal usage summary by Friday
+T008,A004,Medium,neutral,Urgent,escalation,Medium-severity ticket on a Urgent account escalates due to compounding risk.,New admin asks for onboarding materials after former champion left
+T009,A015,Medium,neutral,Watch,escalation,Medium-severity ticket on a Watch account escalates due to compounding risk.,Platform team asks for update on integration roadmap
+T010,A001,Medium,frustrated,Urgent,escalation,Medium-severity ticket on a Urgent account escalates due to compounding risk.,Customer asks why dashboard exports are missing recent data
+T011,A006,Low,positive,Expansion,immediate_resolution,"Low-severity, non-negative sentiment ticket resolved immediately by frontline/AI draft.",Customer asks about premium automation feature limits
+T012,A003,Low,positive,Expansion,immediate_resolution,"Low-severity, non-negative sentiment ticket resolved immediately by frontline/AI draft.",Analytics team asks for best-practice setup for new department

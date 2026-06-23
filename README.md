@@ -43,3 +43,7 @@ Worked examples tying all six together:
 - [`docs/examples/worked-example-academic-coaching.md`](docs/examples/worked-example-academic-coaching.md) — AI-powered coaching system that reduces human intervention while improving outcomes
 
 Legacy blank templates ([`docs/system-design-template.md`](docs/system-design-template.md), [`docs/implementation-plan.md`](docs/implementation-plan.md), [`docs/assessment-notes.md`](docs/assessment-notes.md)) are kept as quick fill-in-the-blank checklists for use during the timed assessment itself.
+
+## Runnable Workflow Simulation
+
+[`cs_workflow_simulation/`](cs_workflow_simulation/) is a separate, runnable deliverable for the assessment's B2B SaaS customer success scenario — a single-command Python simulation covering all 7 workflow stages (account review, prioritization, issue routing, check-in prep, output quality review, intervention planning, escalation routing) over the provided dataset, with a token/cost summary shaped to drop directly into the assessment's Token Math Sheet. See its own README for setup, stage-by-stage explanation, and assumptions.
