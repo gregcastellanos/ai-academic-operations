@@ -38,6 +38,8 @@ For the Crossover AI System Design Assessment (Head of Academics), use these in 
 5. [`docs/templates/implementation-plan-template.md`](docs/templates/implementation-plan-template.md) — phased rollout
 6. [`docs/templates/kpi-dashboard-template.md`](docs/templates/kpi-dashboard-template.md) — metric tree, North Star vs. guardrails
 
-Worked example tying all six together: [`docs/examples/worked-example-at-risk-detection.md`](docs/examples/worked-example-at-risk-detection.md)
+Worked examples tying all six together:
+- [`docs/examples/worked-example-at-risk-detection.md`](docs/examples/worked-example-at-risk-detection.md) — early-warning at-risk student detection
+- [`docs/examples/worked-example-academic-coaching.md`](docs/examples/worked-example-academic-coaching.md) — AI-powered coaching system that reduces human intervention while improving outcomes
 
 Legacy blank templates ([`docs/system-design-template.md`](docs/system-design-template.md), [`docs/implementation-plan.md`](docs/implementation-plan.md), [`docs/assessment-notes.md`](docs/assessment-notes.md)) are kept as quick fill-in-the-blank checklists for use during the timed assessment itself.
