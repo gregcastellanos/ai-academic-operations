@@ -1,5 +1,6 @@
 {
   "accounts_reviewed": 18,
+  "memory_packets_generated": 18,
   "priority_tier_counts": {
     "Urgent": 8,
     "Watch": 2,
@@ -35,6 +36,16 @@
       "account_name": "Harbor Insurance",
       "priority_tier": "Urgent",
       "risk_score": 76,
+      "memory_context_retrieval": {
+        "account_id": "A008",
+        "account_name": "Harbor Insurance",
+        "open_ticket_count": 1,
+        "last_call_date": "2026-04-17",
+        "last_call_followup": "CSM to coordinate technical escalation",
+        "usage_trend": "declining",
+        "next_checkin_date": "2026-05-04",
+        "memory_packet": "Harbor Insurance (Enterprise, $240000 ACV, renews 2026-06-12). Health 48 (was 66). Usage trend: declining. Last call: Implementation progress review - goal: Resolve SSO and complete rollout, blocker: SSO blockers delaying launch, follow-up: CSM to coordinate technical escalation. 1 open ticket(s): Executive sponsor says implementation is blocked by SSO failures. Next check-in 2026-05-04: Implementation recovery."
+      },
       "tickets_routed": [
         {
           "ticket_id": "T001",
@@ -56,7 +67,7 @@
         "scheduled_date": "2026-05-04",
         "topics_to_cover": "SSO status, rollout unblock plan, executive confidence",
         "account_priority_tier": "Urgent",
-        "prior_context": "Last call (2026-04-17): Implementation progress review. Goal: Resolve SSO and complete rollout. Risk/blocker: SSO blockers delaying launch. Outstanding follow-up: CSM to coordinate technical escalation.",
+        "prior_context": "[Retrieved memory] Harbor Insurance (Enterprise, $240000 ACV, renews 2026-06-12). Health 48 (was 66). Usage trend: declining. Last call: Implementation progress review - goal: Resolve SSO and complete rollout, blocker: SSO blockers delaying launch, follow-up: CSM to coordinate technical escalation. 1 open ticket(s): Executive sponsor says implementation is blocked by SSO failures. Next check-in 2026-05-04: Implementation recovery.",
         "next_steps": "Confirm status of: CSM to coordinate technical escalation. Address open ticket(s): Executive sponsor says implementation is blocked by SSO failures."
       },
       "quality_review": [
@@ -86,6 +97,16 @@
       "account_name": "Evergreen Finance",
       "priority_tier": "Urgent",
       "risk_score": 40,
+      "memory_context_retrieval": {
+        "account_id": "A005",
+        "account_name": "Evergreen Finance",
+        "open_ticket_count": 1,
+        "last_call_date": "2026-04-23",
+        "last_call_followup": "Prepare renewal value snapshot",
+        "usage_trend": "declining",
+        "next_checkin_date": "2026-05-05",
+        "memory_packet": "Evergreen Finance (Enterprise, $175000 ACV, renews 2026-05-28). Health 67 (was 76). Usage trend: declining. Last call: Renewal check-in - goal: Demonstrate measurable usage value, blocker: Sponsor wants concise ROI summary, follow-up: Prepare renewal value snapshot. 1 open ticket(s): Executive sponsor requests renewal usage summary by Friday. Next check-in 2026-05-05: Renewal value review."
+      },
       "tickets_routed": [
         {
           "ticket_id": "T007",
@@ -107,7 +128,7 @@
         "scheduled_date": "2026-05-05",
         "topics_to_cover": "ROI summary, adoption proof, renewal risk",
         "account_priority_tier": "Urgent",
-        "prior_context": "Last call (2026-04-23): Renewal check-in. Goal: Demonstrate measurable usage value. Risk/blocker: Sponsor wants concise ROI summary. Outstanding follow-up: Prepare renewal value snapshot.",
+        "prior_context": "[Retrieved memory] Evergreen Finance (Enterprise, $175000 ACV, renews 2026-05-28). Health 67 (was 76). Usage trend: declining. Last call: Renewal check-in - goal: Demonstrate measurable usage value, blocker: Sponsor wants concise ROI summary, follow-up: Prepare renewal value snapshot. 1 open ticket(s): Executive sponsor requests renewal usage summary by Friday. Next check-in 2026-05-05: Renewal value review.",
         "next_steps": "Confirm status of: Prepare renewal value snapshot. Address open ticket(s): Executive sponsor requests renewal usage summary by Friday."
       },
       "quality_review": [
@@ -137,6 +158,16 @@
       "account_name": "Northstar Travel",
       "priority_tier": "Urgent",
       "risk_score": 66,
+      "memory_context_retrieval": {
+        "account_id": "A014",
+        "account_name": "Northstar Travel",
+        "open_ticket_count": 1,
+        "last_call_date": "2026-04-16",
+        "last_call_followup": "Send mobile onboarding plan",
+        "usage_trend": "declining",
+        "next_checkin_date": "2026-05-05",
+        "memory_packet": "Northstar Travel (Mid-Market, $83000 ACV, renews 2026-05-20). Health 52 (was 71). Usage trend: declining. Last call: Mobile adoption check - goal: Increase field-team onboarding, blocker: Mobile onboarding friction, follow-up: Send mobile onboarding plan. 1 open ticket(s): Admin reports mobile users cannot complete onboarding steps. Next check-in 2026-05-05: Mobile adoption plan."
+      },
       "tickets_routed": [
         {
           "ticket_id": "T003",
@@ -158,7 +189,7 @@
         "scheduled_date": "2026-05-05",
         "topics_to_cover": "Mobile onboarding issue, renewal timeline",
         "account_priority_tier": "Urgent",
-        "prior_context": "Last call (2026-04-16): Mobile adoption check. Goal: Increase field-team onboarding. Risk/blocker: Mobile onboarding friction. Outstanding follow-up: Send mobile onboarding plan.",
+        "prior_context": "[Retrieved memory] Northstar Travel (Mid-Market, $83000 ACV, renews 2026-05-20). Health 52 (was 71). Usage trend: declining. Last call: Mobile adoption check - goal: Increase field-team onboarding, blocker: Mobile onboarding friction, follow-up: Send mobile onboarding plan. 1 open ticket(s): Admin reports mobile users cannot complete onboarding steps. Next check-in 2026-05-05: Mobile adoption plan.",
         "next_steps": "Confirm status of: Send mobile onboarding plan. Address open ticket(s): Admin reports mobile users cannot complete onboarding steps."
       },
       "quality_review": [
@@ -188,6 +219,16 @@
       "account_name": "Juniper Manufacturing",
       "priority_tier": "Urgent",
       "risk_score": 38,
+      "memory_context_retrieval": {
+        "account_id": "A010",
+        "account_name": "Juniper Manufacturing",
+        "open_ticket_count": 1,
+        "last_call_date": "2026-04-24",
+        "last_call_followup": "Investigate data freshness issue",
+        "usage_trend": "declining",
+        "next_checkin_date": "2026-05-07",
+        "memory_packet": "Juniper Manufacturing (Mid-Market, $74000 ACV, renews 2026-07-02). Health 58 (was 63). Usage trend: declining. Last call: Usage dashboard review - goal: Understand drop in reporting usage, blocker: Report exports not trusted, follow-up: Investigate data freshness issue. 1 open ticket(s): Power user wants help interpreting usage dashboard drop. Next check-in 2026-05-07: Usage dashboard recovery."
+      },
       "tickets_routed": [
         {
           "ticket_id": "T004",
@@ -209,7 +250,7 @@
         "scheduled_date": "2026-05-07",
         "topics_to_cover": "Reporting usage drop, export data trust",
         "account_priority_tier": "Urgent",
-        "prior_context": "Last call (2026-04-24): Usage dashboard review. Goal: Understand drop in reporting usage. Risk/blocker: Report exports not trusted. Outstanding follow-up: Investigate data freshness issue.",
+        "prior_context": "[Retrieved memory] Juniper Manufacturing (Mid-Market, $74000 ACV, renews 2026-07-02). Health 58 (was 63). Usage trend: declining. Last call: Usage dashboard review - goal: Understand drop in reporting usage, blocker: Report exports not trusted, follow-up: Investigate data freshness issue. 1 open ticket(s): Power user wants help interpreting usage dashboard drop. Next check-in 2026-05-07: Usage dashboard recovery.",
         "next_steps": "Confirm status of: Investigate data freshness issue. Address open ticket(s): Power user wants help interpreting usage dashboard drop."
       },
       "quality_review": [
@@ -239,6 +280,16 @@
       "account_name": "Quartz Media",
       "priority_tier": "Urgent",
       "risk_score": 70,
+      "memory_context_retrieval": {
+        "account_id": "A017",
+        "account_name": "Quartz Media",
+        "open_ticket_count": 1,
+        "last_call_date": "2026-04-09",
+        "last_call_followup": "Identify new sponsor and propose reset",
+        "usage_trend": "declining",
+        "next_checkin_date": "2026-05-07",
+        "memory_packet": "Quartz Media (SMB, $16000 ACV, renews 2026-07-22). Health 46 (was 64). Usage trend: declining. Last call: Reactivation call - goal: Rebuild use case and assign owner, blocker: No clear champion, follow-up: Identify new sponsor and propose reset. 1 open ticket(s): Customer says team has stopped using the platform and needs a reset. Next check-in 2026-05-07: Account reset."
+      },
       "tickets_routed": [
         {
           "ticket_id": "T006",
@@ -260,7 +311,7 @@
         "scheduled_date": "2026-05-07",
         "topics_to_cover": "Champion gap, platform value, reactivation",
         "account_priority_tier": "Urgent",
-        "prior_context": "Last call (2026-04-09): Reactivation call. Goal: Rebuild use case and assign owner. Risk/blocker: No clear champion. Outstanding follow-up: Identify new sponsor and propose reset.",
+        "prior_context": "[Retrieved memory] Quartz Media (SMB, $16000 ACV, renews 2026-07-22). Health 46 (was 64). Usage trend: declining. Last call: Reactivation call - goal: Rebuild use case and assign owner, blocker: No clear champion, follow-up: Identify new sponsor and propose reset. 1 open ticket(s): Customer says team has stopped using the platform and needs a reset. Next check-in 2026-05-07: Account reset.",
         "next_steps": "Confirm status of: Identify new sponsor and propose reset. Address open ticket(s): Customer says team has stopped using the platform and needs a reset."
       },
       "quality_review": [
@@ -286,5 +337,5 @@
       }
     }
   ],
-  "total_estimated_simulation_cost": 0.084409
+  "total_estimated_simulation_cost": 0.094353
 }

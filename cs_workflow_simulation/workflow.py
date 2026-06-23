@@ -34,6 +34,7 @@ MODEL_PRICING = {
     "Claude Sonnet 4.6": {"input": 3.00, "output": 15.00},
     "Claude Opus 4.7": {"input": 5.00, "output": 25.00},
     "GPT-5.4 mini": {"input": 0.75, "output": 4.50},
+    "text-embedding-3-small": {"input": 0.02, "output": 0.00},
 }
 
 CHARS_PER_TOKEN = 4  # standard rule-of-thumb estimate (tokens ~= chars / 4)
@@ -41,6 +42,7 @@ CHARS_PER_TOKEN = 4  # standard rule-of-thumb estimate (tokens ~= chars / 4)
 # Model routing per workflow stage: cheap model for high-volume/simple work,
 # stronger models reserved for judgment-heavy or escalation-heavy stages.
 STAGE_MODEL = {
+    "Memory & retrieval": "text-embedding-3-small",
     "Account monitoring": "Claude Haiku 4.5",
     "Prioritization": "Claude Haiku 4.5",
     "Inbound issue handling": "Claude Sonnet 4.6",
@@ -99,6 +101,71 @@ class TokenLedger:
 
 
 ledger = TokenLedger()
+
+
+# ---------------------------------------------------------------------------
+# Stage 0: Memory & context retrieval
+# ---------------------------------------------------------------------------
+def latest_usage_by_account(usage_events):
+    latest = {}
+    for ev in usage_events:
+        acct = ev["account_id"]
+        if acct not in latest or ev["event_date"] > latest[acct]["event_date"]:
+            latest[acct] = ev
+    return latest
+
+
+def memory_context_retrieval(accounts, call_notes_by_account, tickets_by_account, usage_events, checkins):
+    """Assemble a concise per-account memory packet from every available source
+    (account profile, call history, support history, usage trend, next
+    check-in) before any other stage runs. This is the retrieval step a RAG
+    pipeline would normally do via vector search; here, with a small fixed
+    dataset, a direct per-account lookup is the simpler and equally correct
+    way to assemble the same context."""
+    latest_usage = latest_usage_by_account(usage_events)
+    next_checkin_by_account = {}
+    for c in checkins:
+        acct = c["account_id"]
+        if acct not in next_checkin_by_account or c["scheduled_date"] < next_checkin_by_account[acct]["scheduled_date"]:
+            next_checkin_by_account[acct] = c
+
+    packets = []
+    for acct in accounts:
+        acct_id = acct["account_id"]
+        notes = call_notes_by_account.get(acct_id, [])
+        last_note = notes[-1] if notes else None
+        open_tix = [t for t in tickets_by_account.get(acct_id, []) if t["current_status"] != "closed"]
+        usage = latest_usage.get(acct_id)
+        next_checkin = next_checkin_by_account.get(acct_id)
+
+        memory_packet = (
+            f"{acct['account_name']} ({acct['segment']}, ${acct['contract_value']} ACV, renews {acct['renewal_date']}). "
+            f"Health {acct['current_health_score']} (was {acct['previous_health_score']}). "
+            f"Usage trend: {usage['usage_trend'] if usage else acct['product_usage_trend']}. "
+            + (f"Last call: {last_note['summary']} - goal: {last_note['customer_goal']}, blocker: {last_note['risk_or_blocker']}, follow-up: {last_note['follow_up_items']}. "
+               if last_note else "No prior call notes. ")
+            + (f"{len(open_tix)} open ticket(s): {'; '.join(t['issue_summary'] for t in open_tix)}. " if open_tix else "No open tickets. ")
+            + (f"Next check-in {next_checkin['scheduled_date']}: {next_checkin['checkin_type']}." if next_checkin else "No check-in scheduled.")
+        )
+
+        packet = {
+            "account_id": acct_id,
+            "account_name": acct["account_name"],
+            "open_ticket_count": len(open_tix),
+            "last_call_date": last_note["call_date"] if last_note else "",
+            "last_call_followup": last_note["follow_up_items"] if last_note else "",
+            "usage_trend": usage["usage_trend"] if usage else acct["product_usage_trend"],
+            "next_checkin_date": next_checkin["scheduled_date"] if next_checkin else "",
+            "memory_packet": memory_packet,
+        }
+        packets.append(packet)
+
+        ledger.log(
+            "Memory & retrieval",
+            input_text=json.dumps(acct) + json.dumps(notes) + json.dumps(open_tix) + json.dumps(usage or {}) + json.dumps(next_checkin or {}),
+            output_text=memory_packet,
+        )
+    return packets
 
 
 # ---------------------------------------------------------------------------
@@ -255,7 +322,7 @@ def inbound_support_issue_routing(tickets, tier_by_account):
 # ---------------------------------------------------------------------------
 # Stage 4: Customer check-in preparation
 # ---------------------------------------------------------------------------
-def customer_checkin_preparation(checkins, accounts_by_id, call_notes_by_account, tickets_by_account, tier_by_account):
+def customer_checkin_preparation(checkins, accounts_by_id, call_notes_by_account, tickets_by_account, tier_by_account, memory_packets_by_account):
     briefs = []
     for c in checkins:
         acct_id = c["account_id"]
@@ -263,12 +330,11 @@ def customer_checkin_preparation(checkins, accounts_by_id, call_notes_by_account
         notes = call_notes_by_account.get(acct_id, [])
         last_note = notes[-1] if notes else None
         open_tix = [t for t in tickets_by_account.get(acct_id, []) if t["current_status"] != "closed"]
+        memory = memory_packets_by_account.get(acct_id)
 
         prior_context = (
-            f"Last call ({last_note['call_date']}): {last_note['summary']}. "
-            f"Goal: {last_note['customer_goal']}. Risk/blocker: {last_note['risk_or_blocker']}. "
-            f"Outstanding follow-up: {last_note['follow_up_items']}."
-            if last_note
+            f"[Retrieved memory] {memory['memory_packet']}"
+            if memory
             else "No prior call notes on file."
         )
         next_steps = (
@@ -630,6 +696,10 @@ def main():
         tickets_by_account[t["account_id"]].append(t)
     qs_lookup = {q["standard_id"]: q for q in quality_standards}
 
+    # Stage 0
+    memory_packets = memory_context_retrieval(accounts, call_notes_by_account, tickets_by_account, usage_events, checkins)
+    memory_packets_by_account = {p["account_id"]: p for p in memory_packets}
+
     # Stage 1 + 2
     reviewed = daily_account_review(accounts, usage_events)
     prioritized = account_prioritization(reviewed, tickets)
@@ -643,7 +713,7 @@ def main():
 
     # Stage 4
     briefs = customer_checkin_preparation(
-        checkins, accounts_by_id, call_notes_by_account, tickets_by_account, tier_by_account
+        checkins, accounts_by_id, call_notes_by_account, tickets_by_account, tier_by_account, memory_packets_by_account
     )
 
     # Stage 5
@@ -661,6 +731,15 @@ def main():
     checks = run_evaluation_checks(prioritized, plans, routed_tickets, briefs, quality_reviews)
 
     # ---- Write outputs ----
+    write_csv(
+        "memory_context_retrieval.csv",
+        memory_packets,
+        fieldnames=[
+            "account_id", "account_name", "open_ticket_count", "last_call_date",
+            "last_call_followup", "usage_trend", "next_checkin_date", "memory_packet",
+        ],
+    )
+
     write_csv(
         "account_prioritization.csv",
         prioritized,
@@ -733,6 +812,7 @@ def main():
                 "account_name": rec["account_name"],
                 "priority_tier": rec["priority_tier"],
                 "risk_score": rec["risk_score"],
+                "memory_context_retrieval": memory_packets_by_account.get(acct_id),
                 "tickets_routed": [r for r in routed_tickets if r["account_id"] == acct_id],
                 "checkin_brief": next((b for b in briefs if b["account_id"] == acct_id), None),
                 "quality_review": [q for q in quality_reviews if q["account_id"] == acct_id],
@@ -742,6 +822,7 @@ def main():
 
     run_summary = {
         "accounts_reviewed": len(prioritized),
+        "memory_packets_generated": len(memory_packets),
         "priority_tier_counts": {
             tier: sum(1 for r in prioritized if r["priority_tier"] == tier)
             for tier in ("Urgent", "Watch", "Expansion", "Stable")
@@ -760,6 +841,7 @@ def main():
 
     # ---- Console report ----
     print("=== CS AI Workflow Simulation: run complete ===")
+    print(f"Memory packets generated: {len(memory_packets)}")
     print(f"Accounts reviewed: {len(prioritized)}")
     for tier in ("Urgent", "Watch", "Expansion", "Stable"):
         n = run_summary["priority_tier_counts"][tier]

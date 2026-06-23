@@ -1,8 +1,9 @@
 workflow_component,operating_area,model,input_dollar_per_1m,output_dollar_per_1m,runs_in_this_simulation,total_input_tokens_estimate,total_output_tokens_estimate,avg_input_tokens_per_run,avg_output_tokens_per_run,estimated_cost_this_simulation,notebook_measured_avg_cost_per_run
+Memory & retrieval,Memory & retrieval,text-embedding-3-small,0.02,0.0,18,5264,1387,292.4,77.1,0.000104,5.78e-06
 Account monitoring,Account monitoring,Claude Haiku 4.5,1.0,5.0,18,2930,1337,162.8,74.3,0.009615,0.00053417
 Prioritization,Prioritization,Claude Haiku 4.5,1.0,5.0,18,1337,198,74.3,11.0,0.002327,0.00012928
 Inbound issue handling,Inbound issue handling,Claude Sonnet 4.6,3.0,15.0,12,874,339,72.8,28.2,0.007707,0.00064225
-Customer check-in support,Customer check-in support,Claude Sonnet 4.6,3.0,15.0,12,2243,926,186.9,77.2,0.020619,0.00171825
+Customer check-in support,Customer check-in support,Claude Sonnet 4.6,3.0,15.0,12,2243,1582,186.9,131.8,0.030459,0.00253825
 Output quality review,Output quality review,GPT-5.4 mini,0.75,4.5,8,2837,938,354.6,117.2,0.006348,0.0007935
 Targeted intervention planning,Targeted intervention planning,Claude Sonnet 4.6,3.0,15.0,15,2361,1676,157.4,111.7,0.032223,0.0021482
 24/7 responsiveness / escalation,24/7 responsiveness / escalation,Claude Opus 4.7,5.0,25.0,20,854,52,42.7,2.6,0.00557,0.0002785
