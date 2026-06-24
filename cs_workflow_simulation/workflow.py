@@ -629,6 +629,29 @@ def run_evaluation_checks(prioritized, plans, routed_tickets, briefs, quality_re
     return checks
 
 
+REMEDIATION_ROUTES = {
+    "every_high_risk_account_has_action": "Route to CSM Manager queue for manual intervention plan within 1 business day",
+    "every_high_severity_ticket_escalated_or_resolved": "Route to immediate escalation queue -- treat as a routing-logic defect, not just a one-off miss",
+    "every_checkin_has_context_and_next_steps": "Route back to Customer check-in support stage for regeneration before the scheduled check-in",
+    "every_junior_output_checked_against_standards": "Route to Output quality review stage for a full re-check before Approve/Revise/Escalate is finalized",
+}
+
+
+def write_evaluation_failures(checks, path):
+    failures = [
+        {
+            "check": name,
+            "detail": result["detail"],
+            "recommended_remediation_route": REMEDIATION_ROUTES.get(name, "Route to CSM Manager for manual review"),
+        }
+        for name, result in checks.items()
+        if not result["passed"]
+    ]
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump({"failures": failures}, f, indent=2)
+    return failures
+
+
 # ---------------------------------------------------------------------------
 # Output writers
 # ---------------------------------------------------------------------------
@@ -729,6 +752,7 @@ def main():
 
     # Evaluation checks
     checks = run_evaluation_checks(prioritized, plans, routed_tickets, briefs, quality_reviews)
+    eval_failures = write_evaluation_failures(checks, os.path.join(OUT_DIR, "evaluation_failures.json"))
 
     # ---- Write outputs ----
     write_csv(
@@ -856,6 +880,8 @@ def main():
     for name, result in checks.items():
         status = "PASS" if result["passed"] else "FAIL"
         print(f"  [{status}] {name}: {result['detail']}")
+    if eval_failures:
+        print(f"  -> {len(eval_failures)} failure(s) written to evaluation_failures.json with remediation routes")
     print()
     print(f"Outputs written to: {OUT_DIR}")
 

@@ -15,6 +15,16 @@ python3 workflow.py
 
 Loads the 7 input CSVs in `data/` and runs them through 8 workflow stages, end to end, for the full 18-account portfolio. Writes results to `outputs/`.
 
+## Scale: 18-account demo vs. 750-account production scope
+
+This simulation runs against a fixed 18-account dataset so the assessment run is small, deterministic, and reviewable line by line. The actual assignment scope is a **750-account production portfolio** with ~30 inbound support tickets/week and ~12 scheduled check-ins/week, with targeted interventions reviewed roughly every two weeks for Urgent/Watch/Expansion accounts and account monitoring running every business day.
+
+The 18-account run is never used directly as the production estimate. It is used only to **measure real per-run token/cost footprints** for each stage (`outputs/token_cost_summary.csv`), which are then scaled by volume ratio and annualized by cadence factor to the 750-account scope in the Token Math Sheet (`outputs/Token_Math_Sheet_Completed.xlsx`). That sheet's `Candidate Assumptions` tab labels every figure as **Measured** (straight from this simulation), **Scaled estimate** (measured value × a documented production-volume ratio), or **Assumption** (not measured or derived, e.g. retry/QA multipliers) — so production-scope conclusions are traceable back to either a measured number or an explicitly stated assumption, never blended silently.
+
+## 24/7 responsiveness
+
+The escalation stage (stage 7, `escalation_followup_routing`) is modeled as event-driven rather than cadence-batched: it runs continuously against whatever stages 3 and 5 have flagged, instead of waiting for the next business-day or weekly batch. In the Token Math Sheet this is reflected as the "24/7 responsiveness / escalation" operating area, priced on Claude Opus 4.7 (highest stakes, lowest volume) and annualized on a business-day-equivalent escalation-event cadence rather than a fixed daily/weekly run count, since escalation-worthy events don't arrive on a schedule.
+
 ## Workflow stages
 
 0. **Memory & context retrieval** (`memory_context_retrieval`) — runs first, before any other stage. For every account, pulls account profile, call history, open support tickets, the latest usage event, and the next scheduled check-in into one concise memory packet. This is the retrieval step a production RAG pipeline would do via vector search over a much larger corpus; with this small fixed dataset, a direct per-account lookup produces the same result without the added machinery. Stage 4 (check-in preparation) consumes this stage's output directly rather than re-deriving context from scratch.
@@ -35,6 +45,7 @@ Loads the 7 input CSVs in `data/` and runs them through 8 workflow stages, end t
 - **`quality_review.csv`** — every junior output, which standards passed/failed, and the resulting recommendation (Approve / Revise / Escalate to senior CSM review).
 - **`intervention_plan.md`** — recommended action per Urgent/Watch/Expansion account, grouped by tier.
 - **`run_summary.json`** — aggregate counts, the evaluation check results, and 5 fully expanded end-to-end account runs (every stage's output for one account, including its memory packet, in one place) for accounts A008, A005, A014, A010, A017 — chosen because they have data in every input file.
+- **`evaluation_failures.json`** — written every run; contains one entry per failed evaluation check (check name, detail, recommended remediation route). Empty on the current dataset since all four checks pass. See "Failure handling" below.
 - **`token_cost_summary.csv`** — per-stage token/cost rollup. Columns are named to map directly onto the Token Math Sheet's "Token Math Template" tab (`workflow_component`, `operating_area`, `model`, input/output $ per 1M, tokens per run). The `notebook_measured_avg_cost_per_run` column is what you transfer into that sheet's "Notebook measured avg cost/run" field for the estimate-vs-measured variance check.
 
 ## Evaluation checks
@@ -65,10 +76,39 @@ This mirrors the assessment's stated principle: cheap models for high-volume/sim
 
 ## What's heuristic vs. what would be a real model call
 
-This simulation does not call any LLM API — it estimates token/cost footprint and implements the *decision logic* an LLM-backed system would need, in plain Python, so it's auditable line by line. In a real build:
+This simulation does not call any LLM API — it estimates token/cost footprint and implements the *decision logic* an LLM-backed system would need, in plain Python, so it's auditable line by line and gives the same output on every run. In a real build:
 
 - Stages 0–4 and 7 are good candidates to stay mostly rules-based even in production, with a cheap embedding/retrieval model (stage 0) and a cheap generation model only for any free-text summarization.
 - Stage 5 (quality review) and stage 6 (intervention planning) are where an actual LLM call earns its cost — judging tone, risk-proportionality, and drafting a tailored recommendation are not reliably rule-based. The heuristics here (`ACTION_WORDS`, `OVERSTATE_WORDS`, keyword overlap) are a deliberately simple stand-in for what an LLM-as-judge would do against the same `quality_standards.csv` rubric.
+
+### Prompt templates (`prompts/`)
+
+The code stays deterministic intentionally — it needs to produce the same result on every run for this assessment to be reviewable and re-runnable. The `prompts/` folder is where the production-equivalent LLM prompts live instead of in the code: one markdown file per workflow stage, each documenting the model assigned to that stage, the prompt template a live system would send, and the output shape that matches what the deterministic code already produces. Swapping the simulation's rule-based logic for these prompts (one stage at a time, against a real model) is the natural next step beyond this assessment's scope — the templates are written so that substitution is direct.
+
+| Stage | Prompt template |
+|---|---|
+| Memory & retrieval | `prompts/memory_retrieval_prompt.md` |
+| Account monitoring | `prompts/account_monitoring_prompt.md` |
+| Prioritization | `prompts/prioritization_prompt.md` |
+| Inbound issue handling | `prompts/inbound_issue_routing_prompt.md` |
+| Customer check-in support | `prompts/checkin_preparation_prompt.md` |
+| Output quality review | `prompts/output_quality_review_prompt.md` |
+| Targeted intervention planning | `prompts/intervention_planning_prompt.md` |
+| 24/7 responsiveness / escalation | `prompts/escalation_prompt.md` |
+| Evaluation / QA (sampled review) | `prompts/evaluation_qa_prompt.md` |
+
+## Failure handling
+
+The four automated evaluation checks (below) all pass on the current dataset. If any check ever fails, `main()` writes the failure(s) to `outputs/evaluation_failures.json` instead of only printing to console, with one entry per failed check containing the check name, the specific item(s) that failed it, and a recommended remediation route:
+
+| Failed check | Recommended remediation route |
+|---|---|
+| Urgent account missing an intervention action | Route to CSM Manager queue for manual intervention plan within 1 business day |
+| High-severity ticket not escalated/resolved | Route to immediate escalation queue — treat as a routing-logic defect, not just a one-off miss |
+| Check-in brief missing context or next steps | Route back to Customer check-in support stage for regeneration before the scheduled check-in |
+| Junior output not checked against a tagged standard | Route to Output quality review stage for a full re-check before Approve/Revise/Escalate is finalized |
+
+If no checks fail, `evaluation_failures.json` is not written (or is written empty) — its presence/absence is itself a signal of run health, separate from the human-readable PASS/FAIL summary already in `run_summary.json`.
 
 ## Assumptions
 
