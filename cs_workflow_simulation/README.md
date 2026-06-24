@@ -6,6 +6,14 @@ A runnable, single-command simulation of an AI-assisted B2B SaaS customer succes
 
 No dependencies beyond Python 3 standard library.
 
+Run from the repository root:
+
+```bash
+python3 cs_workflow_simulation/workflow.py
+```
+
+Or equivalently from inside this directory:
+
 ```bash
 cd cs_workflow_simulation
 python3 workflow.py
@@ -118,6 +126,25 @@ If no checks fail, `evaluation_failures.json` is not written (or is written empt
 - Risk/opportunity scoring weights (e.g. `usage_trend_weight * 6`, `risk_score >= 30` for Urgent) are illustrative and documented in code; in a real deployment these would be calibrated against actual churn/renewal outcomes, not picked once and left alone.
 - Quality-review heuristics are intentionally simple keyword/structure checks, not semantic understanding — they're meant to demonstrate the *shape* of automated rubric scoring, not to be production-accurate.
 - Health score, ticket volume, product usage, NPS, and engagement are leading indicators, not the outcome itself — the real outcomes are retention, expansion, customer satisfaction, and long-term account health. This workflow uses the leading indicators to prioritize staff attention early, before those signals show up in renewal or churn numbers. Because they're a proxy, the thresholds and scoring rules behind them aren't set-and-forget: they should be reviewed quarterly against actual account outcomes and staff feedback, and recalibrated using human overrides and outcome data so the system improves over time instead of drifting from what it's actually trying to predict.
+
+## How humans stay in the loop
+
+Nothing in this system auto-sends anything to a customer or auto-closes a ticket. Every stage produces a recommendation or routing decision for a human to act on, not a final action:
+
+- **Output quality review** never auto-sends a junior-drafted output — its only possible outcomes are Approve / Revise / Escalate to senior CSM review, and even an "Approve" still means a human CSM sends it.
+- **Targeted intervention planning** assigns a named human owner (`csm_owner`) and a due window for every recommended action — the system proposes, the named CSM executes.
+- **Escalation / 24-7 responsiveness** routes flagged items to a human escalation queue; it does not resolve tickets itself.
+- **Evaluation checks** and `evaluation_failures.json` are a human-facing audit trail, not a self-correcting loop — a failed check surfaces a remediation route for a person (CSM Manager, support lead) to act on, the system does not retry or override itself.
+- Scoring weights and quality-standard heuristics are documented in code specifically so a human reviewer can challenge and recalibrate them against real outcomes (see Assumptions below) rather than treating the model's output as ground truth.
+
+## Known limitations
+
+- This is a deterministic rule-based simulation, not a live LLM-backed system — see "What's heuristic vs. what would be a real model call" above. The `prompts/` templates show the intended production prompts, but no model has actually been called against them in this deliverable.
+- Token/cost figures are estimated via `len(text) // 4`, a standard rough heuristic, not an actual tokenizer count — real token counts from a production tokenizer will differ somewhat from these estimates.
+- The 750-account production volumes in the Token Math Sheet are scaled from an 18-account measured sample; a sample of that size has limited statistical power to predict per-run token sizes at full scale, and should be re-measured against real production traffic once available.
+- Risk/opportunity scoring thresholds and quality-standard heuristics are illustrative starting points, calibrated by inspection rather than against actual churn/renewal/QA outcomes data.
+- The dataset is static and synthetic; there is no handling of malformed/missing CSV rows beyond what Python's default CSV parsing provides, since production input validation was out of scope for this assessment.
+- Only 4 evaluation checks are implemented; a production system would likely need a broader test suite covering edge cases (e.g. accounts with no call notes, tickets with no account match) before being trusted unattended.
 
 ## How token and cost estimates are calculated
 
